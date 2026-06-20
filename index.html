@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Konoba More — Vodice</title>
+<meta name="description" content="Konoba More — obiteljska konoba u Vodicama. Dalmatinski domaći specijaliteti, svježa riba na gradele i potpisni crni rižot. Rezervacije telefonom." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌊</text></svg>" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet" />
+
+<style>
+  :root{
+    --bg:#F5F4F1;
+    --bg-alt:#EBEAE2;
+    --text-dark:#2C2924;
+    --text-mid:#7C7570;
+    --stone:#9C938C;
+    --accent:#C4612A;
+    --line:rgba(44,41,36,0.12);
+    --font-display:'Cormorant Garamond',Georgia,serif;
+    --font-body:'DM Sans',system-ui,sans-serif;
+    --ease:cubic-bezier(0.22,1,0.36,1);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{
+    background:var(--bg);
+    color:var(--text-dark);
+    font-family:var(--font-body);
+    font-weight:400;
+    font-size:17px;
+    line-height:1.7;
+    overflow-x:hidden;
+  }
+  body.no-scroll{overflow:hidden}
+  img{display:block;max-width:100%;height:auto}
+  a{color:inherit;text-decoration:none}
+  ::selection{background:var(--accent);color:#fff}
+
+  .wrap{max-width:1320px;margin:0 auto;padding:0 40px}
+  .eyebrow{
+    font-family:var(--font-body);
+    text-transform:uppercase;
+    font-size:11px;
+    letter-spacing:.18em;
+    color:var(--text-mid);
+    font-weight:500;
+    display:block;
+  }
+  h1,h2,h3{font-family:var(--font-display);font-weight:400;line-height:1.05;letter-spacing:.02em}
+  .italic{font-style:italic;font-weight:300}
+
+  /* ---------- PRELOADER ---------- */
+  .preloader{
+    position:fixed;inset:0;z-index:9000;
+    background:var(--bg);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .preloader-name{
+    font-family:var(--font-display);
+    font-size:clamp(34px,6vw,60px);
+    letter-spacing:.06em;
+    color:var(--text-dark);
+    opacity:0;
+  }
+  .preloader-name span{font-style:italic;font-weight:300;color:var(--accent)}
+
+  /* ---------- CUSTOM CURSOR ---------- */
+  .cursor{
+    position:fixed;top:0;left:0;width:10px;height:10px;
+    border:1px solid var(--text-dark);
+    border-radius:50%;
+    pointer-events:none;z-index:9999;
+    transform:translate(-50%,-50%);
+    mix-blend-mode:difference;
+    opacity:0;
+  }
+  @media (hover:none),(pointer:coarse){.cursor{display:none!important}}
+
+  /* ---------- HEADER ---------- */
+  header{
+    position:fixed;top:0;left:0;width:100%;z-index:800;
+    padding:26px 0;
+    transition:transform .5s var(--ease),background .4s ease,padding .4s ease;
+    mix-blend-mode:normal;
+  }
+  header.scrolled{
+    background:rgba(245,244,241,0.86);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    padding:18px 0;
+    border-bottom:1px solid var(--line);
+  }
+  header.hide{transform:translateY(-100%)}
+  header.hero-mode .logo,
+  header.hero-mode .nav-links a,
+  header.hero-mode .burger span{color:#fff;background:#fff}
+  header.hero-mode .nav-links a{background:transparent;color:#fff}
+  header.hero-mode .logo{color:#fff}
+  .nav-inner{display:flex;align-items:center;justify-content:space-between}
+  .logo{
+    font-family:var(--font-display);
+    font-size:23px;letter-spacing:.04em;
+    transition:color .4s ease;
+  }
+  .logo span{font-style:italic;color:var(--accent)}
+  header.hero-mode .logo span{color:#fff}
+  .nav-right{display:flex;align-items:center;gap:40px}
+  .nav-links{display:flex;gap:34px}
+  .nav-links a{
+    text-transform:uppercase;font-size:11px;letter-spacing:.16em;
+    font-weight:500;color:var(--text-mid);
+    transition:color .3s ease;
+    position:relative;
+  }
+  .nav-links a::after{
+    content:'';position:absolute;left:0;bottom:-5px;width:0;height:1px;
+    background:currentColor;transition:width .4s var(--ease);
+  }
+  .nav-links a:hover::after{width:100%}
+  .btn-reserve{
+    display:inline-flex;align-items:center;gap:8px;
+    background:var(--accent);color:#fff!important;
+    text-transform:uppercase;font-size:11px;letter-spacing:.16em;font-weight:500;
+    padding:12px 22px;border-radius:2px;
+    transition:transform .3s var(--ease),opacity .3s ease;
+  }
+  .btn-reserve:hover{transform:translateY(-2px);opacity:.92}
+  header.hero-mode .btn-reserve{color:#fff!important}
+
+  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;width:26px}
+  .burger span{display:block;height:1.5px;width:100%;background:var(--text-dark);transition:.3s var(--ease)}
+
+  /* ---------- MOBILE MENU ---------- */
+  .mobile-menu{
+    position:fixed;inset:0;z-index:790;
+    background:var(--bg);
+    display:flex;flex-direction:column;justify-content:center;align-items:center;
+    gap:8px;
+    clip-path:inset(0 0 100% 0);
+    transition:clip-path .7s var(--ease);
+  }
+  .mobile-menu.open{clip-path:inset(0 0 0 0)}
+  .mobile-menu a{
+    font-family:var(--font-display);font-size:40px;color:var(--text-dark);
+    padding:6px 0;
+  }
+  .mobile-menu .mm-reserve{
+    margin-top:24px;font-family:var(--font-body);font-size:12px;
+    text-transform:uppercase;letter-spacing:.16em;
+    background:var(--accent);color:#fff;padding:14px 30px;border-radius:2px;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;height:100vh;min-height:640px;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .hero-bg{
+    position:absolute;inset:0;
+    background-image:url('https://loremflickr.com/1920/1280/adriatic,sea,terrace?lock=12');
+    background-size:cover;background-position:center;
+    will-change:transform;transform:scale(1.05);
+  }
+  .hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,15,.28),rgba(20,18,15,.15) 40%,rgba(20,18,15,.42))}
+  .hero-content{position:relative;z-index:2;text-align:center;color:#fff;padding:0 24px}
+  .hero-content .eyebrow{color:rgba(255,255,255,.78);margin-bottom:22px}
+  .hero-content h1{
+    font-size:clamp(72px,15vw,180px);
+    color:#fff;font-weight:300;letter-spacing:.01em;
+  }
+  .hero-content .sub{
+    margin-top:18px;font-size:15px;letter-spacing:.04em;
+    color:rgba(255,255,255,.86);font-weight:300;max-width:440px;margin-left:auto;margin-right:auto;
+  }
+  .scroll-ind{
+    position:absolute;bottom:34px;left:50%;transform:translateX(-50%);
+    z-index:3;color:#fff;text-transform:uppercase;
+    font-size:10px;letter-spacing:.22em;display:flex;flex-direction:column;align-items:center;gap:10px;
+  }
+  .scroll-ind .arrow{font-size:14px;animation:bob 2s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(6px);opacity:1}}
+
+  /* ---------- MANIFEST ---------- */
+  .manifest{padding:160px 0 130px;text-align:center}
+  .manifest .eyebrow{margin-bottom:34px}
+  .manifest p{
+    font-family:var(--font-display);
+    font-size:clamp(28px,3.6vw,46px);
+    line-height:1.28;font-weight:300;
+    max-width:680px;margin:0 auto;color:var(--text-dark);
+  }
+  .manifest p em{font-style:italic;color:var(--accent)}
+
+  /* ---------- EDITORIAL SPLIT BLOCKS ---------- */
+  .kuhinja{padding:60px 0 80px}
+  .split{
+    display:grid;grid-template-columns:1fr 1fr;gap:90px;align-items:center;
+    padding:70px 0;
+  }
+  .split.reverse .split-text{order:2}
+  .split.reverse .split-img{order:1}
+  .split-img{overflow:hidden;border-radius:2px}
+  .split-img img{
+    width:100%;aspect-ratio:4/5;object-fit:cover;
+    will-change:clip-path;
+  }
+  .split-text .eyebrow{margin-bottom:22px}
+  .split-text .num{
+    font-family:var(--font-display);font-size:15px;color:var(--stone);
+    letter-spacing:.1em;margin-bottom:14px;display:block;
+  }
+  .split-text h2{
+    font-size:clamp(38px,4.5vw,62px);margin-bottom:26px;
+  }
+  .split-text p{
+    color:var(--text-mid);max-width:420px;font-size:16px;line-height:1.8;
+  }
+  .split-text .tag{
+    margin-top:28px;font-style:italic;font-family:var(--font-display);
+    font-size:21px;color:var(--text-dark);
+  }
+
+  /* ---------- POTPISNO JELO ---------- */
+  .signature{
+    position:relative;margin:90px 0;padding:130px 0;
+    background:var(--bg-alt);overflow:hidden;
+  }
+  .signature .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:center}
+  .signature-img{overflow:hidden;border-radius:2px}
+  .signature-img img{width:100%;aspect-ratio:3/4;object-fit:cover;will-change:clip-path}
+  .signature-text .eyebrow{color:var(--accent);margin-bottom:24px}
+  .signature-text h2{font-size:clamp(44px,6vw,86px);line-height:1;margin-bottom:30px}
+  .signature-text h2 .italic{display:block;color:var(--accent)}
+  .signature-text p{color:var(--text-mid);max-width:440px;margin-bottom:18px;line-height:1.85}
+  .signature-text .signoff{font-family:var(--font-display);font-style:italic;font-size:22px;color:var(--text-dark);margin-top:10px}
+
+  /* ---------- UZ MORE ---------- */
+  .uzmore{padding:40px 0 120px}
+  .uzmore-img{overflow:hidden;border-radius:2px}
+  .uzmore-img img{width:100%;height:64vh;min-height:420px;object-fit:cover;will-change:clip-path}
+  .uzmore-cap{
+    display:flex;justify-content:space-between;align-items:flex-end;
+    margin-top:30px;flex-wrap:wrap;gap:24px;
+  }
+  .uzmore-cap h2{font-size:clamp(34px,4vw,54px)}
+  .uzmore-cap p{color:var(--text-mid);max-width:380px;font-size:15px}
+
+  /* ---------- MENU ---------- */
+  .menu{padding:120px 0}
+  .menu-head{text-align:center;margin-bottom:80px}
+  .menu-head .eyebrow{margin-bottom:24px}
+  .menu-head h2{font-size:clamp(44px,6vw,80px)}
+  .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px 90px;max-width:1000px;margin:0 auto}
+  .menu-cat .eyebrow{color:var(--accent);margin-bottom:30px;padding-bottom:16px;border-bottom:1px solid var(--line)}
+  .menu-item{padding:16px 0;border-bottom:1px solid var(--line)}
+  .menu-item:last-child{border-bottom:none}
+  .menu-item h3{font-size:25px;font-weight:400;margin-bottom:5px}
+  .menu-item p{font-size:14px;color:var(--text-mid);line-height:1.6}
+  .menu-note{text-align:center;margin-top:70px;color:var(--stone);font-style:italic;font-family:var(--font-display);font-size:20px}
+
+  /* ---------- GALLERY ---------- */
+  .gallery{padding:60px 0 130px}
+  .gallery-head{margin-bottom:60px}
+  .gallery-head .eyebrow{margin-bottom:20px}
+  .gallery-head h2{font-size:clamp(40px,5vw,68px)}
+  .gal-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:22px;grid-auto-flow:dense}
+  .gal-item{overflow:hidden;border-radius:2px}
+  .gal-item img{width:100%;height:100%;object-fit:cover;will-change:clip-path;transition:transform 1.2s var(--ease)}
+  .gal-item:hover img{transform:scale(1.04)}
+  .g1{grid-column:span 7;aspect-ratio:3/2}
+  .g2{grid-column:span 5;aspect-ratio:3/4}
+  .g3{grid-column:span 5;aspect-ratio:4/5}
+  .g4{grid-column:span 7;aspect-ratio:3/2}
+  .g5{grid-column:span 4;aspect-ratio:1/1}
+  .g6{grid-column:span 4;aspect-ratio:1/1}
+  .g7{grid-column:span 4;aspect-ratio:1/1}
+
+  /* ---------- CONTACT ---------- */
+  .contact{padding:120px 0;background:var(--bg-alt)}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+  .contact-info .eyebrow{margin-bottom:26px}
+  .contact-info h2{font-size:clamp(40px,5vw,72px);margin-bottom:36px}
+  .contact-info h2 .italic{color:var(--accent)}
+  .contact-row{padding:22px 0;border-top:1px solid var(--line)}
+  .contact-row:last-of-type{border-bottom:1px solid var(--line);margin-bottom:36px}
+  .contact-row .label{display:block;text-transform:uppercase;font-size:10px;letter-spacing:.18em;color:var(--stone);margin-bottom:8px}
+  .contact-row .val{font-size:20px;font-family:var(--font-display)}
+  .contact-row a:hover{color:var(--accent)}
+  .contact-cta{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--accent);color:#fff;
+    text-transform:uppercase;font-size:11px;letter-spacing:.16em;font-weight:500;
+    padding:16px 34px;border-radius:2px;
+    transition:transform .3s var(--ease);
+  }
+  .contact-cta:hover{transform:translateY(-2px)}
+  .contact-map{overflow:hidden;border-radius:2px;box-shadow:0 30px 60px -30px rgba(44,41,36,.3)}
+  .contact-map iframe{width:100%;height:480px;border:0;filter:grayscale(.4) contrast(1.02)}
+
+  /* ---------- FOOTER ---------- */
+  footer{padding:70px 0 110px;text-align:center}
+  footer .flogo{font-family:var(--font-display);font-size:36px;letter-spacing:.04em;margin-bottom:18px}
+  footer .flogo span{font-style:italic;color:var(--accent)}
+  footer .ftag{color:var(--text-mid);font-style:italic;font-family:var(--font-display);font-size:19px;margin-bottom:36px}
+  footer .flinks{display:flex;gap:30px;justify-content:center;margin-bottom:40px;flex-wrap:wrap}
+  footer .flinks a{text-transform:uppercase;font-size:11px;letter-spacing:.16em;color:var(--text-mid)}
+  footer .flinks a:hover{color:var(--accent)}
+  footer .copy{font-size:12px;color:var(--stone);letter-spacing:.04em}
+
+  /* ---------- RESERVATION SLIDE-IN PANEL ---------- */
+  .res-panel{
+    position:fixed;top:0;right:0;width:min(460px,100vw);height:100vh;z-index:1000;
+    background:var(--bg);padding:60px 46px;
+    transform:translateX(100%);
+    box-shadow:-30px 0 80px -40px rgba(44,41,36,.4);
+    overflow-y:auto;pointer-events:none;
+  }
+  .res-panel .close{
+    position:absolute;top:32px;right:40px;font-size:24px;cursor:pointer;color:var(--text-mid);
+    line-height:1;transition:color .3s ease;
+  }
+  .res-panel .close:hover{color:var(--accent)}
+  .res-panel .eyebrow{color:var(--accent);margin-bottom:20px}
+  .res-panel h3{font-size:42px;margin-bottom:24px}
+  .res-panel p{color:var(--text-mid);font-size:15px;margin-bottom:34px;line-height:1.8}
+  .res-panel .res-phone{
+    display:block;font-family:var(--font-display);font-size:34px;color:var(--text-dark);
+    margin-bottom:8px;letter-spacing:.02em;
+  }
+  .res-panel .res-phone:hover{color:var(--accent)}
+  .res-panel .res-call{
+    display:inline-flex;align-items:center;gap:10px;margin-top:30px;
+    background:var(--accent);color:#fff;
+    text-transform:uppercase;font-size:11px;letter-spacing:.16em;font-weight:500;
+    padding:16px 32px;border-radius:2px;width:100%;justify-content:center;
+  }
+  .res-meta{margin-top:46px;border-top:1px solid var(--line);padding-top:30px}
+  .res-meta .label{text-transform:uppercase;font-size:10px;letter-spacing:.18em;color:var(--stone);display:block;margin-bottom:6px}
+  .res-meta .val{font-family:var(--font-display);font-size:18px;margin-bottom:22px;display:block}
+  .res-overlay{
+    position:fixed;inset:0;z-index:990;background:rgba(28,26,22,.4);
+    opacity:0;pointer-events:none;transition:opacity .5s ease;
+  }
+  .res-overlay.show{opacity:1;pointer-events:all}
+
+  /* ---------- STICKY MOBILE BAR ---------- */
+  .mobile-bar{
+    position:fixed;bottom:0;left:0;width:100%;z-index:700;
+    display:none;
+    background:var(--bg);border-top:1px solid var(--line);
+    padding:12px 18px;
+  }
+  .mobile-bar a{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    background:var(--accent);color:#fff;
+    text-transform:uppercase;font-size:12px;letter-spacing:.14em;font-weight:500;
+    padding:15px;border-radius:2px;
+  }
+
+  /* ---------- REVEAL UTILS ---------- */
+  .word{display:inline-block;overflow:hidden;vertical-align:top}
+  .word-inner{display:inline-block}
+  [data-fade]{opacity:0;transform:translateY(24px)}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:980px){
+    .wrap{padding:0 26px}
+    .split{grid-template-columns:1fr;gap:40px;padding:50px 0}
+    .split.reverse .split-text{order:1}
+    .split.reverse .split-img{order:2}
+    .split-text p,.split-text{max-width:none}
+    .signature .wrap{grid-template-columns:1fr;gap:46px}
+    .signature{padding:90px 0}
+    .menu-grid{grid-template-columns:1fr;gap:50px}
+    .contact-grid{grid-template-columns:1fr;gap:50px}
+    .nav-links{display:none}
+    .burger{display:flex}
+    .gal-grid{grid-template-columns:repeat(6,1fr)}
+    .g1,.g4{grid-column:span 6}
+    .g2,.g3{grid-column:span 3}
+    .g5,.g6,.g7{grid-column:span 2}
+    .mobile-bar{display:block}
+    .header-reserve{display:none}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 20px}
+    .manifest{padding:110px 0 90px}
+    .gal-grid{grid-template-columns:1fr;gap:16px}
+    .g1,.g2,.g3,.g4,.g5,.g6,.g7{grid-column:span 1;aspect-ratio:4/3}
+    .uzmore-img img{height:50vh}
+    body{padding-bottom:64px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition-duration:.001ms!important}
+    [data-fade]{opacity:1;transform:none}
+    .hero-bg{transform:none}
+    .cursor{display:none!important}
+  }
+</style>
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div class="preloader" id="preloader">
+  <div class="preloader-name">Konoba <span>More</span></div>
+</div>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor" id="cursor"></div>
+
+<!-- HEADER -->
+<header id="header" class="hero-mode">
+  <div class="wrap nav-inner">
+    <a href="#top" class="logo" data-link>Konoba <span>More</span></a>
+    <div class="nav-right">
+      <nav class="nav-links">
+        <a href="#kuhinja" data-link>Kuhinja</a>
+        <a href="#jelovnik" data-link>Jelovnik</a>
+        <a href="#uzmore" data-link>Uz more</a>
+        <a href="#kontakt" data-link>Kontakt</a>
+      </nav>
+      <a href="tel:+385959081888" class="btn-reserve header-reserve" data-open-res data-link>Rezerviraj</a>
+    </div>
+    <div class="burger" id="burger" data-link><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#kuhinja" data-mm>Kuhinja</a>
+  <a href="#jelovnik" data-mm>Jelovnik</a>
+  <a href="#uzmore" data-mm>Uz more</a>
+  <a href="#galerija" data-mm>Galerija</a>
+  <a href="#kontakt" data-mm>Kontakt</a>
+  <a href="tel:+385959081888" class="mm-reserve" data-mm>Rezerviraj — +385 95 908 1888</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <span class="eyebrow">Vodice · Dalmacija</span>
+    <h1 class="hero-title" data-split>More.</h1>
+    <p class="sub" data-fade>Obiteljska konoba na obali. Riba, sol i mir Jadrana.</p>
+  </div>
+  <div class="scroll-ind"><span>Scroll</span><span class="arrow">↓</span></div>
+</section>
+
+<!-- MANIFEST -->
+<section class="manifest">
+  <div class="wrap">
+    <span class="eyebrow">Naša filozofija</span>
+    <p data-split>Kuhamo onako kako se kuhalo uz ovu obalu oduvijek — <em>jednostavno, sa strpljenjem</em> i poštovanjem prema onome što more da. Bez žurbe, bez suvišnog. Samo riba, maslinovo ulje i večer koja ne traži ništa više.</p>
+  </div>
+</section>
+
+<!-- KUHINJA -->
+<section class="kuhinja" id="kuhinja">
+  <div class="wrap">
+
+    <div class="split">
+      <div class="split-img"><img data-reveal loading="lazy" src="https://loremflickr.com/900/1100/black,risotto?lock=21" alt="Crni rižot" /></div>
+      <div class="split-text">
+        <span class="num">01</span>
+        <span class="eyebrow">Iz mora</span>
+        <h2 data-split>Crni rižot</h2>
+        <p>Sipa, njezino crnilo i domaća riža koja se mirno krčka dok ne postane baršun. Naš potpis — onaj okus po kojem nas gosti pamte i vraćaju se.</p>
+        <p class="tag">„More na žlici."</p>
+      </div>
+    </div>
+
+    <div class="split reverse">
+      <div class="split-img"><img data-reveal loading="lazy" src="https://loremflickr.com/900/1100/grilled,fish?lock=22" alt="Riba na gradele" /></div>
+      <div class="split-text">
+        <span class="num">02</span>
+        <span class="eyebrow">Na gradele</span>
+        <h2 data-split>Svježa riba</h2>
+        <p>Ono što ribari donesu ujutro, navečer je na gradelama. Orada, brancin, škarpina — pečeno na žaru, preliveno maslinovim uljem i kapljom limuna. Ništa više nije potrebno.</p>
+        <p class="tag">„Ulov dana, ne više od toga."</p>
+      </div>
+    </div>
+
+    <div class="split">
+      <div class="split-img"><img data-reveal loading="lazy" src="https://loremflickr.com/900/1100/seafood,squid?lock=23" alt="Plodovi mora" /></div>
+      <div class="split-text">
+        <span class="num">03</span>
+        <span class="eyebrow">S pučine</span>
+        <h2 data-split>Plodovi mora</h2>
+        <p>Lignje, srdele, školjke i sve što Jadran skriva ispod površine. Pripremljeno bez kompromisa, posluženo uz domaći kruh i hladno bijelo vino s brda.</p>
+        <p class="tag">„Sol, ulje, vatra."</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- SIGNATURE -->
+<section class="signature">
+  <div class="wrap">
+    <div class="signature-img"><img data-reveal loading="lazy" src="https://loremflickr.com/1000/1300/black,risotto,squid?lock=31" alt="Potpisni crni rižot" /></div>
+    <div class="signature-text">
+      <span class="eyebrow">Potpisno jelo</span>
+      <h2 data-split>Crni rižot<span class="italic">naš potpis</span></h2>
+      <p>Recept se nije mijenjao godinama. Sipa očišćena ručno, njezino crnilo, malo bijelog vina i riža koja upija svaki okus mora dok je strpljivo miješamo.</p>
+      <p>Pripremamo ga svjež, za svaki stol posebno. To je jelo s kojim počinje svaka priča o Konobi More.</p>
+      <p class="signoff">— iz naše kuhinje, za vaš stol</p>
+    </div>
+  </div>
+</section>
+
+<!-- UZ MORE -->
+<section class="uzmore" id="uzmore">
+  <div class="wrap">
+    <div class="uzmore-img"><img data-reveal loading="lazy" src="https://loremflickr.com/1600/1000/croatia,coast,vodice?lock=41" alt="Vodice, obala" /></div>
+    <div class="uzmore-cap">
+      <h2 data-split>Uz more, u Vodicama</h2>
+      <p>Stolovi uz samu vodu, večernje svjetlo nad rivom i lagani žamor luke. Vodice onako kako su uvijek bile — tihe, tople i naše.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MENU -->
+<section class="menu" id="jelovnik">
+  <div class="wrap">
+    <div class="menu-head">
+      <span class="eyebrow">Jelovnik</span>
+      <h2 data-split>Dalmatinski domaći specijaliteti</h2>
+    </div>
+    <div class="menu-grid">
+
+      <div class="menu-cat">
+        <span class="eyebrow">Za početak</span>
+        <div class="menu-item"><h3>Pršut i domaći sir</h3><p>Dalmatinski pršut, ovčji sir, masline</p></div>
+        <div class="menu-item"><h3>Srdele na lešo</h3><p>Marinirane srdele, maslinovo ulje</p></div>
+        <div class="menu-item"><h3>Salata od hobotnice</h3><p>Krumpir, kapari, peršin, ulje</p></div>
+        <div class="menu-item"><h3>Domaći kruh i ulje</h3><p>Pečeni kruh, ekstra djevičansko ulje</p></div>
+      </div>
+
+      <div class="menu-cat">
+        <span class="eyebrow">Iz mora</span>
+        <div class="menu-item"><h3>Crni rižot</h3><p>Sipa, riža, crnilo — naš potpis</p></div>
+        <div class="menu-item"><h3>Riba na gradele</h3><p>Ulov dana, žar, limun, ulje</p></div>
+        <div class="menu-item"><h3>Lignje na žaru</h3><p>Blitva, krumpir, češnjak</p></div>
+        <div class="menu-item"><h3>Plodovi mora</h3><p>Školjke, lignje, srdele za stol</p></div>
+      </div>
+
+      <div class="menu-cat">
+        <span class="eyebrow">S brda i vrta</span>
+        <div class="menu-item"><h3>Blitva sa krumpirom</h3><p>Domaća, na dalmatinski</p></div>
+        <div class="menu-item"><h3>Sezonska salata</h3><p>Iz okolnih vrtova</p></div>
+        <div class="menu-item"><h3>Domaći sir s maslinama</h3><p>Ovčji sir, ulje, začinsko bilje</p></div>
+      </div>
+
+      <div class="menu-cat">
+        <span class="eyebrow">Uz objed</span>
+        <div class="menu-item"><h3>Domaće bijelo vino</h3><p>S okolnih brda, hladno</p></div>
+        <div class="menu-item"><h3>Maslinovo ulje</h3><p>Vlastita berba, hladno prešano</p></div>
+        <div class="menu-item"><h3>Domaća rakija</h3><p>Travarica, smokva, višnja</p></div>
+      </div>
+
+    </div>
+    <p class="menu-note">Jelovnik se mijenja s ulovom i sezonom — pitajte za današnju preporuku.</p>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery" id="galerija">
+  <div class="wrap">
+    <div class="gallery-head">
+      <span class="eyebrow">Galerija</span>
+      <h2 data-split>Trenuci iz konobe</h2>
+    </div>
+    <div class="gal-grid">
+      <div class="gal-item g1"><img data-reveal loading="lazy" src="https://loremflickr.com/1100/740/restaurant,interior?lock=51" alt="Interijer konobe" /></div>
+      <div class="gal-item g2"><img data-reveal loading="lazy" src="https://loremflickr.com/700/940/adriatic,sea?lock=52" alt="Pogled na more" /></div>
+      <div class="gal-item g3"><img data-reveal loading="lazy" src="https://loremflickr.com/700/880/grilled,fish?lock=53" alt="Riba na žaru" /></div>
+      <div class="gal-item g4"><img data-reveal loading="lazy" src="https://loremflickr.com/1100/740/restaurant,terrace?lock=54" alt="Terasa uz more" /></div>
+      <div class="gal-item g5"><img data-reveal loading="lazy" src="https://loremflickr.com/600/600/olive,oil?lock=55" alt="Maslinovo ulje" /></div>
+      <div class="gal-item g6"><img data-reveal loading="lazy" src="https://loremflickr.com/600/600/squid,seafood?lock=56" alt="Lignje" /></div>
+      <div class="gal-item g7"><img data-reveal loading="lazy" src="https://loremflickr.com/600/600/croatia,coast?lock=57" alt="Obala Vodica" /></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="kontakt">
+  <div class="wrap contact-grid">
+    <div class="contact-info">
+      <span class="eyebrow">Rezervacije i kontakt</span>
+      <h2 data-split>Vidimo se <span class="italic">uz more</span></h2>
+      <div class="contact-row">
+        <span class="label">Lokacija</span>
+        <span class="val">Vodice, Dalmacija — Hrvatska</span>
+      </div>
+      <div class="contact-row">
+        <span class="label">Telefon · samo rezervacije</span>
+        <a href="tel:+385959081888" class="val" data-link>+385 95 908 1888</a>
+      </div>
+      <div class="contact-row">
+        <span class="label">Instagram</span>
+        <a href="https://instagram.com/konoba.more.vodice" target="_blank" rel="noopener" class="val" data-link>@konoba.more.vodice</a>
+      </div>
+      <a href="tel:+385959081888" class="contact-cta" data-link>Rezerviraj telefonom →</a>
+    </div>
+    <div class="contact-map">
+      <iframe
+        title="Konoba More Vodice — karta"
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://maps.google.com/maps?q=Konoba%20More%20Vodice&t=&z=14&ie=UTF8&iwloc=&output=embed">
+      </iframe>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="flogo">Konoba <span>More</span></div>
+    <p class="ftag">More. Riba iz Jadrana, u srcu Vodica.</p>
+    <div class="flinks">
+      <a href="#kuhinja" data-link>Kuhinja</a>
+      <a href="#jelovnik" data-link>Jelovnik</a>
+      <a href="#kontakt" data-link>Kontakt</a>
+      <a href="https://instagram.com/konoba.more.vodice" target="_blank" rel="noopener" data-link>Instagram</a>
+    </div>
+    <p class="copy">© 2026 Konoba More · Vodice, Dalmacija · +385 95 908 1888</p>
+  </div>
+</footer>
+
+<!-- RESERVATION SLIDE-IN PANEL -->
+<div class="res-overlay" id="resOverlay"></div>
+<aside class="res-panel" id="resPanel" aria-hidden="true">
+  <span class="close" id="resClose" data-link>✕</span>
+  <span class="eyebrow">Rezervacija</span>
+  <h3>Rezervirajte stol</h3>
+  <p>Rezervacije primamo isključivo telefonom — tako svaki stol pripremimo onako kako treba. Nazovite nas, rado ćemo vas dočekati.</p>
+  <a href="tel:+385959081888" class="res-phone" data-link>+385 95 908 1888</a>
+  <a href="tel:+385959081888" class="res-call" data-link>Nazovi sada →</a>
+  <div class="res-meta">
+    <span class="label">Lokacija</span>
+    <span class="val">Vodice, Dalmacija</span>
+    <span class="label">Instagram</span>
+    <span class="val"><a href="https://instagram.com/konoba.more.vodice" target="_blank" rel="noopener" data-link>@konoba.more.vodice</a></span>
+  </div>
+</aside>
+
+<!-- STICKY MOBILE BAR -->
+<div class="mobile-bar">
+  <a href="tel:+385959081888">Rezerviraj — +385 95 908 1888</a>
+</div>
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function(){
+  "use strict";
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  /* ---------- SPLIT WORDS (run before reveals) ---------- */
+  function splitWords(el){
+    const text = el.textContent.trim();
+    el.innerHTML = text.split(/\s+/).map(w =>
+      '<span class="word"><span class="word-inner">'+w+'</span></span>'
+    ).join(' ');
+  }
+  document.querySelectorAll('[data-split]').forEach(splitWords);
+
+  /* ---------- PRELOADER ---------- */
+  function startSite(){
+    if (typeof gsap === 'undefined') { initSite(); return; }
+    const pre = document.getElementById('preloader');
+    const name = pre.querySelector('.preloader-name');
+    if (reduced) {
+      pre.style.display = 'none';
+      initSite();
+      return;
+    }
+    gsap.timeline({ onComplete: () => {
+        gsap.to(pre, { opacity:0, duration:.7, ease:'power2.out', onComplete:()=>{
+          pre.style.display='none';
+          initSite();
+        }});
+      }})
+      .to(name, { opacity:1, y:0, duration:1, ease:'power3.out' })
+      .to(name, { opacity:1, duration:.6 });
+  }
+
+  /* ---------- MAIN ---------- */
+  function initSite(){
+    const hasGSAP = typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined';
+    if (hasGSAP) gsap.registerPlugin(ScrollTrigger);
+
+    /* Lenis smooth scroll */
+    let lenis = null;
+    if (typeof Lenis !== 'undefined' && !reduced){
+      lenis = new Lenis({
+        duration:1.2,
+        easing:t => Math.min(1, 1.001 - Math.pow(2, -10*t)),
+        smoothWheel:true
+      });
+      if (hasGSAP){
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add(time => lenis.raf(time*1000));
+        gsap.ticker.lagSmoothing(0);
+      } else {
+        function raf(t){ lenis.raf(t); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+      }
+    }
+
+    /* Anchor scrolling */
+    function scrollToTarget(href){
+      const t = document.querySelector(href);
+      if (!t) return;
+      if (lenis) lenis.scrollTo(t, { offset:-70 });
+      else t.scrollIntoView({ behavior:'smooth' });
+    }
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{
+      a.addEventListener('click', e=>{
+        const href = a.getAttribute('href');
+        if (href.length > 1){ e.preventDefault(); scrollToTarget(href); closeMobile(); }
+      });
+    });
+
+    /* ---------- HEADER show/hide + scrolled + hero-mode ---------- */
+    const header = document.getElementById('header');
+    const hero = document.querySelector('.hero');
+    let lastY = window.scrollY;
+    function onScroll(){
+      const y = window.scrollY;
+      header.classList.toggle('scrolled', y > 40);
+      const heroBottom = hero.offsetHeight - 90;
+      header.classList.toggle('hero-mode', y < heroBottom);
+      if (y > lastY && y > 300 && !document.getElementById('mobileMenu').classList.contains('open')){
+        header.classList.add('hide');
+      } else {
+        header.classList.remove('hide');
+      }
+      lastY = y;
+    }
+    window.addEventListener('scroll', onScroll, { passive:true });
+    onScroll();
+
+    /* ---------- HERO scale + parallax ---------- */
+    if (hasGSAP && !reduced){
+      const heroBg = document.getElementById('heroBg');
+      gsap.to(heroBg, { scale:1.14, ease:'none',
+        scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:1.2 }});
+      gsap.to('.hero-content', { yPercent:18, opacity:.4, ease:'none',
+        scrollTrigger:{ trigger:'.hero', start:'top top', end:'bottom top', scrub:.6 }});
+    }
+
+    /* ---------- HERO intro ---------- */
+    if (hasGSAP){
+      gsap.set('.hero-title .word-inner', { yPercent:120 });
+      gsap.to('.hero-title .word-inner', { yPercent:0, duration:1.2, ease:'power4.out', delay:.1 });
+      gsap.to('.hero-content .sub', { opacity:1, y:0, duration:1, delay:.6, ease:'power3.out' });
+      gsap.to('.hero-content .eyebrow', { opacity:1, duration:1, delay:.3 });
+    }
+
+    /* ---------- WORD STAGGER on H2/H3 ---------- */
+    if (hasGSAP && !reduced){
+      document.querySelectorAll('[data-split]').forEach(el=>{
+        if (el.classList.contains('hero-title')) return;
+        const inners = el.querySelectorAll('.word-inner');
+        gsap.set(inners, { yPercent:115 });
+        gsap.to(inners, {
+          yPercent:0, duration:.9, ease:'power3.out', stagger:.045,
+          scrollTrigger:{ trigger:el, start:'top 88%' }
+        });
+      });
+    }
+
+    /* ---------- CLIP-PATH IMAGE REVEAL ---------- */
+    if (hasGSAP && !reduced){
+      gsap.utils.toArray('[data-reveal]').forEach(el=>{
+        gsap.fromTo(el,
+          { clipPath:'inset(0 0 100% 0)' },
+          { clipPath:'inset(0 0 0% 0)', duration:1.2, ease:'power3.inOut',
+            scrollTrigger:{ trigger:el, start:'top 82%' }});
+      });
+    }
+
+    /* ---------- FADE reveals ---------- */
+    if (hasGSAP && !reduced){
+      gsap.utils.toArray('[data-fade]').forEach(el=>{
+        gsap.to(el, { opacity:1, y:0, duration:1, ease:'power3.out',
+          scrollTrigger:{ trigger:el, start:'top 90%' }});
+      });
+    } else {
+      document.querySelectorAll('[data-fade]').forEach(el=>{ el.style.opacity=1; el.style.transform='none'; });
+    }
+
+    /* ---------- CUSTOM CURSOR ---------- */
+    const cursor = document.getElementById('cursor');
+    if (canHover && !reduced && hasGSAP){
+      let cx=0, cy=0;
+      gsap.set(cursor,{ opacity:1 });
+      const xT = gsap.quickTo(cursor,'x',{ duration:.4, ease:'power3' });
+      const yT = gsap.quickTo(cursor,'y',{ duration:.4, ease:'power3' });
+      window.addEventListener('mousemove', e=>{ xT(e.clientX); yT(e.clientY); });
+      document.querySelectorAll('a, button, [data-link], [data-open-res]').forEach(el=>{
+        el.addEventListener('mouseenter', ()=> gsap.to(cursor,{ scale:2.6, duration:.3, ease:'power2.out' }));
+        el.addEventListener('mouseleave', ()=> gsap.to(cursor,{ scale:1, duration:.3, ease:'power2.out' }));
+      });
+    } else if (cursor){
+      cursor.style.display='none';
+    }
+
+    /* ---------- MOBILE MENU ---------- */
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    function closeMobile(){
+      mobileMenu.classList.remove('open');
+      document.body.classList.remove('no-scroll');
+    }
+    window.closeMobile = closeMobile;
+    burger.addEventListener('click', ()=>{
+      const open = mobileMenu.classList.toggle('open');
+      document.body.classList.toggle('no-scroll', open);
+    });
+    document.querySelectorAll('[data-mm]').forEach(a=>{
+      a.addEventListener('click', ()=> setTimeout(closeMobile, 60));
+    });
+
+    /* ---------- RESERVATION PANEL ---------- */
+    const resPanel = document.getElementById('resPanel');
+    const resOverlay = document.getElementById('resOverlay');
+    const resClose = document.getElementById('resClose');
+    function openRes(){
+      resOverlay.classList.add('show');
+      resPanel.setAttribute('aria-hidden','false');
+      resPanel.style.pointerEvents='all';
+      document.body.classList.add('no-scroll');
+      if (lenis) lenis.stop();
+      if (hasGSAP) gsap.to(resPanel,{ x:0, duration:.55, ease:'power3.inOut' });
+      else resPanel.style.transform='translateX(0)';
+    }
+    function closeRes(){
+      resOverlay.classList.remove('show');
+      resPanel.setAttribute('aria-hidden','true');
+      resPanel.style.pointerEvents='none';
+      document.body.classList.remove('no-scroll');
+      if (lenis) lenis.start();
+      if (hasGSAP) gsap.to(resPanel,{ x:'100%', duration:.45, ease:'power3.in' });
+      else resPanel.style.transform='translateX(100%)';
+    }
+    document.querySelectorAll('[data-open-res]').forEach(b=>{
+      b.addEventListener('click', e=>{
+        // allow tel: on small screens to dial; on desktop open panel
+        if (canHover){ e.preventDefault(); openRes(); }
+      });
+    });
+    resClose.addEventListener('click', closeRes);
+    resOverlay.addEventListener('click', closeRes);
+    document.addEventListener('keydown', e=>{ if (e.key==='Escape') closeRes(); });
+
+    if (hasGSAP) ScrollTrigger.refresh();
+  }
+
+  if (document.readyState === 'loading'){
+    window.addEventListener('DOMContentLoaded', startSite);
+  } else {
+    startSite();
+  }
+})();
+</script>
+</body>
+</html>
